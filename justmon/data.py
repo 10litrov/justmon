@@ -26,6 +26,9 @@ class DB:
         cursor.execute('CREATE TABLE IF NOT EXISTS pings (host TEXT, date INTEGER, status INTEGER)')
         cursor.execute('CREATE INDEX IF NOT EXISTS host_idx ON pings (host)')
         cursor.execute('CREATE INDEX IF NOT EXISTS date_idx ON pings (date)')
+        cursor.execute('CREATE TRIGGER IF NOT EXISTS ins_trg BEFORE INSERT ON pings '
+                       'WHEN NEW.status IN (SELECT status FROM pings WHERE host=NEW.host ORDER BY date DESC LIMIT 1) '
+                       'BEGIN SELECT RAISE(IGNORE); END')
 
     def getHosts(self):
         return self.hosts.keys()

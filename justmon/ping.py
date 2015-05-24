@@ -14,7 +14,7 @@ class PingService(TimerService):
 
     @inlineCallbacks
     def ping(self):
-        output = yield getProcessOutput(self.cmd, args=self.db.getHosts())
+        output = yield getProcessOutput(self.cmd, args=self.db.getHosts(), errortoo=True)
         log.msg('; '.join(output.splitlines()))
 
         for host, status in [line.split(' ', 1) for line in output.splitlines()]:
