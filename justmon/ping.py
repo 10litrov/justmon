@@ -1,4 +1,5 @@
 from datetime import datetime
+from time import mktime
 from twisted.application.internet import TimerService
 from twisted.internet.defer import inlineCallbacks
 from twisted.internet.utils import getProcessOutput
@@ -18,4 +19,4 @@ class PingService(TimerService):
         log.msg('; '.join(output.splitlines()))
 
         for host, status in [line.split(' ', 1) for line in output.splitlines()]:
-            self.db.setHostStatus(host, datetime.now(), status == 'is alive')
+            self.db.setHostStatus(host, mktime(datetime.now().timetuple()), status == 'is alive')

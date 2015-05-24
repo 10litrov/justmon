@@ -46,16 +46,12 @@ class Api(Resource):
         return NOT_DONE_YET
 
 
-class Root(Resource):
-    def getChild(self, path, request):
-        if path == 'api':
-            return Api()
-        else:
-            return File('./static')
-
-
 class WebSite(Site):
     def __init__(self, db):
-        Site.__init__(self, Root())
+        root = Resource()
+        root.putChild('api', Api())
+        root.putChild('', File('./static'))
+        
+        Site.__init__(self, root)
 
         self.db = db

@@ -30,7 +30,7 @@ angular.module('justmon', ['ngMaterial'])
 
     .filter('datetime', function () {
         return function (input) {
-            return new Date(input).toLocaleString()
+            return new Date(input * 1000).toLocaleString()
         }
     })
 
