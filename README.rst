@@ -16,3 +16,4 @@ Options::
     -p, --port=      HTTP server interface port [default: 8080]
     -i, --interval=  Hosts check interval [default: 30]
     -c, --command=   fping location [default: /usr/local/bin/fping]
+
