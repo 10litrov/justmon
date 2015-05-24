@@ -2,4 +2,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+dropin.cache
+twistd.pid
+
 .idea/
