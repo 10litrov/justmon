@@ -3,7 +3,8 @@ from distutils.core import setup
 setup(
     name='justmon',
     version='0.0.1',
-    packages=['justmon', 'justmon.static', 'twisted.plugins'],
+    packages=['justmon', 'twisted.plugins'],
+    package_data={'justmon': ['static/*']},
     url='https://github.com/10litrov/justmon',
     license='',
     author='Ivan Phrolov',
