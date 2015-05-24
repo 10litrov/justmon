@@ -1,5 +1,6 @@
 import json
-from twisted.web.resource import Resource, NoResource
+
+from twisted.web.resource import Resource
 from twisted.web.server import Site, NOT_DONE_YET
 from twisted.web.static import File
 
@@ -48,9 +49,13 @@ class Api(Resource):
 
 class WebSite(Site):
     def __init__(self, db):
+        from os.path import dirname, join
+        from inspect import getabsfile
+        static = join(dirname(getabsfile(WebSite)), 'static')
+
         root = Resource()
         root.putChild('api', Api())
-        root.putChild('', File('./static'))
+        root.putChild('', File(static))
         
         Site.__init__(self, root)
 

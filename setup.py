@@ -8,5 +8,6 @@ setup(
     license='',
     author='Ivan Phrolov',
     author_email='10litrov@gmail.com',
-    description='A simple python program for host monitoring'
+    description='A simple python program for host monitoring',
+    requires=['twisted']
 )
