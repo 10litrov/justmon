@@ -1,6 +1,8 @@
 "use strict";
 
 angular.module('justmon', ['ngMaterial'])
+    .constant('moment', moment)
+
     .config(['$mdThemingProvider', '$mdIconProvider', function ($mdThemingProvider, $mdIconProvider) {
         $mdThemingProvider.theme('default');
 
@@ -28,11 +30,11 @@ angular.module('justmon', ['ngMaterial'])
         return data;
     }])
 
-    .filter('datetime', function () {
+    .filter('momentCalendar', ['moment', function (moment) {
         return function (input) {
-            return new Date(input * 1000).toLocaleString()
+            return moment.unix(input).calendar()
         }
-    })
+    }])
 
     .controller('StatusCtrl', ['$scope', 'Data', function ($scope, Data) {
         $scope.data = Data;

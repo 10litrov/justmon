@@ -53,10 +53,9 @@ class WebSite(Site):
         from inspect import getabsfile
         static = join(dirname(getabsfile(WebSite)), 'static')
 
-        root = Resource()
+        root = File(static)
         root.putChild('api', Api())
-        root.putChild('', File(static))
-        
+
         Site.__init__(self, root)
 
         self.db = db

@@ -9,9 +9,9 @@ class Options(usage.Options):
     optParameters = [
         ['database', 'd', './justmon.db', 'Database file path'],
         ['host', 'h', 'localhost', 'HTTP server interface address'],
-        ['port', 'p', 8080, 'HTTP server interface port'],
-        ['interval', 'i', 30, 'Hosts check interval'],
-        ['command', 'c', '/usr/local/bin/fping', 'fping location'],
+        ['port', 'p', 8080, 'HTTP server interface port', int],
+        ['interval', 'i', 30, 'Hosts check interval', int],
+        ['command', 'c', '/usr/bin/fping', 'Fping location'],
     ]
     # optFlags = []
 
