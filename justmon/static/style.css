@@ -2,6 +2,12 @@
     display: none !important;
 }
 
+md-grid-list md-grid-tile figure {
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+}
+
 .host-list-item {
     display: -webkit-flex;
     display: -ms-flexbox;
