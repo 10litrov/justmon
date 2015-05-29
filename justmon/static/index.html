@@ -5,32 +5,31 @@
     <title>Just Monitor</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/angular-material/0.9.4/angular-material.min.css">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+    <link rel="stylesheet" href="style.css"/>
     <meta name="viewport" content="initial-scale=1" />
-    <style>
-        .icon-ok {color: #4CAF50 !important;}
-        .icon-warn {color: #F44336 !important;}
-    </style>
 </head>
 <body ng-controller="StatusCtrl">
-    <div layout="column" layout-fill layout-align="start center">
+    <div layout="column" layout-fill>
         <md-toolbar ng-class="{'md-warn': !data.ok}">
             <div class="md-toolbar-tools">
                 <span flex></span><span>Just Monitor</span><span flex></span>
             </div>
         </md-toolbar>
 
-        <md-list>
-            <md-list-item class="md-2-line" ng-repeat="host in data.hosts track by host.name">
-                <md-icon md-svg-icon="{{host.status ? 'smile' : 'sad'}}"
-                         ng-class="host.status ? 'icon-ok' : 'icon-warn'"
-                         alt="{{host.status ? 'OK' : 'FAIL'}}">
-                </md-icon>
-                <div class="md-list-item-text">
-                    <h3>{{host.name}}</h3>
-                    <p>changed {{host.last | momentCalendar}}</p>
+        <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="4" md-row-height="4rem">
+            <md-grid-tile ng-repeat="host in data.hosts track by host.name" ng-class="host.status ? 'ok' : 'warn'">
+                <div class="host-list-item">
+                    <md-icon md-svg-icon="{{host.status ? 'smile' : 'sad'}}"
+                             ng-class="host.status ? 'ok' : 'warn'"
+                             alt="{{host.status ? 'OK' : 'FAIL'}}">
+                    </md-icon>
+                    <div class="host-list-item-text">
+                        <h3>{{host.name}}</h3>
+                        <p>{{host.last | momentCalendar}}</p>
+                    </div>
                 </div>
-            </md-list-item>
-        </md-list>
+            </md-grid-tile>
+        </md-grid-list>
     </div>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>

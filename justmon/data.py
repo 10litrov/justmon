@@ -38,6 +38,7 @@ class DB:
             for row in data:
                 if self.hosts.get(row['name']):
                     row['name'] = self.hosts[row['name']]
+            data.sort(key=lambda x: x['name'])
             return data
 
         query = 'SELECT l.host, l.date, p.status FROM pings AS p ' \
