@@ -1,17 +1,18 @@
 "use strict";
 
-angular.module('justmon', ['ngMaterial'])
-    .constant('moment', moment)
+angular.module('justmon', ['ngAnimate', 'ngMaterial'])
+    .constant('google', google)
 
     .config(['$mdThemingProvider', '$mdIconProvider', function ($mdThemingProvider, $mdIconProvider) {
         $mdThemingProvider.theme('default');
 
         $mdIconProvider
             .icon('smile', 'img/smile.svg')
-            .icon('sad', 'img/sad.svg');
+            .icon('sad', 'img/sad.svg')
+            .icon('back', 'img/back.svg');
     }])
 
-    .factory('Data', ['$http', '$interval', function ($http, $interval) {
+    .factory('status', ['$http', '$interval', function ($http, $interval) {
         var data = {
             hosts: [],
             ok: true
@@ -30,13 +31,30 @@ angular.module('justmon', ['ngMaterial'])
         return data;
     }])
 
-    .filter('momentCalendar', ['moment', function (moment) {
-        return function (input) {
-            return moment.unix(input).calendar()
+    .factory('stats', ['$http', function ($http) {
+        return function (host) {
+            return $http.get('/api/stats/' + host);
         }
     }])
 
-    .controller('StatusCtrl', ['$scope', 'Data', function ($scope, Data) {
-        $scope.data = Data;
+    .directive('timeline', ['google', 'stats', function (google, stats) {
+        return {
+            restrict: 'E',
+            scope: {
+                host: '='
+            },
+            link: function (scope, element) {
+                function render() {
+                    var chart = new google.visualization.Timeline(element[0]);
+                    var dataTable = new google.visualization.DataTable();
+                    chart.draw(dataTable)
+                }
+                google.load('visualization', '1', {packages:['timeline'], callback: render});
+            }
+        }
+    }])
+
+    .controller('StatusCtrl', ['$scope', 'status', function ($scope, status) {
+        $scope.status = status;
     }])
 ;

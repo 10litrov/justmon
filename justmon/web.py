@@ -40,7 +40,13 @@ class Api(Resource):
     def render_GET(self, request):
         path = next(iter(request.postpath), None)
         if path == 'hosts':
-            self.send(request.site.db.getAllHostStatus(), request)
+            self.send(request.site.db.getHostsStatus(), request)
+        elif path == 'stats':
+            host = next(iter(request.args.get('host', [])), None)
+            if host is not None:
+                self.send(request.site.db.getHostStats(host), request)
+            else:
+                self.sendError('Bad Request', 400, request)
         else:
             self.sendError('No Such Resource', 404, request)
 

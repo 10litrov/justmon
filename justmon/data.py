@@ -18,8 +18,15 @@ class DB:
         return "'%s'" % ("%s" % (self.ESCAPE_REGEX.sub(lambda match: self.ESCAPE_MAP.get(match.group(0)), value),))
 
     @staticmethod
-    def _nameRow(result, columns):
+    def _makeNamedColumns(result, columns):
         return [dict(zip(columns, row)) for row in result]
+
+    def _hideHosts(self, data):
+        for row in data:
+            if self.hosts.get(row['name']):
+                row['name'] = self.hosts[row['name']]
+        data.sort(key=lambda x: x['name'])
+        return data
 
     @staticmethod
     def _createSchema(cursor):
@@ -33,23 +40,21 @@ class DB:
     def getHosts(self):
         return self.hosts.keys()
 
-    def getAllHostStatus(self):
-        def hideHosts(data):
-            for row in data:
-                if self.hosts.get(row['name']):
-                    row['name'] = self.hosts[row['name']]
-            data.sort(key=lambda x: x['name'])
-            return data
-
-        query = 'SELECT l.host, l.date, p.status FROM pings AS p ' \
-                'INNER JOIN (SELECT host, max(date ) AS date ' \
+    def getHostsStatus(self):
+        query = 'SELECT l.host, strftime("%%Y-%%m-%%dT%%H:%%M:%%SZ", l.date, "unixepoch"), p.status FROM pings AS p ' \
+                'INNER JOIN (SELECT host, max(date) AS date ' \
                 'FROM pings WHERE host IN (%s) GROUP BY host) AS l ' \
                 'ON p.host = l.host AND p.date = l.date' \
                 % ','.join([self._escape(host) for host in self.hosts.keys()])
         return self.pool.runQuery(query)\
-            .addCallback(self._nameRow, ['name', 'last', 'status'])\
-            .addCallback(hideHosts)
+            .addCallback(self._makeNamedColumns, ['name', 'last', 'status'])\
+            .addCallback(self._hideHosts)
 
     def setHostStatus(self, host, date, status):
         return self.pool.runOperation(
             'INSERT INTO pings (host, date, status) VALUES (?, ?, ?)', (host, date, status))
+
+    def getHostStats(self, host):
+        query = ''
+        return self.pool.runQuery(query, )\
+            .addCallback(self._makeNamedColumns, [])

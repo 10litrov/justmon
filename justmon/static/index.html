@@ -3,42 +3,59 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Just Monitor</title>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/angular-material/0.9.4/angular-material.min.css">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
     <link rel="stylesheet" href="style.css"/>
-    <meta name="viewport" content="initial-scale=1" />
+    <meta name="viewport" content="initial-scale=1"/>
 </head>
 <body ng-controller="StatusCtrl" ng-cloak>
-    <div layout="column" layout-fill>
-        <md-toolbar ng-class="{'md-warn': !data.ok}">
-            <div class="md-toolbar-tools">
-                <span flex></span><span>Just Monitor</span><span flex></span>
-            </div>
-        </md-toolbar>
+<div layout="column" layout-fill>
+    <md-toolbar ng-class="{'md-warn': !status.ok}">
+        <div class="md-toolbar-tools">
+            <span flex></span><span>Just Monitor</span><span flex></span>
+        </div>
+    </md-toolbar>
 
-        <md-content layout-padding>
-            <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="4" md-row-height="4rem">
-                <md-grid-tile ng-repeat="host in data.hosts track by host.name" ng-class="host.status ? 'ok' : 'warn'">
-                    <div class="host-list-item">
+    <md-content layout-padding>
+        <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="4" md-row-height="4rem" md-gutter="1em">
+            <md-grid-tile ng-repeat="host in status.hosts track by host.name"
+                          ng-init="chart=false;hover=false;"
+                          ng-click="chart=!chart"
+                          ng-mouseenter="hover=true"
+                          ng-mouseleave="hover=false"
+                          ng-class="{'pointer':!chart, 'md-whiteframe-z1':!chart&&hover, 'chart':chart}">
+                          <!--md-colspan-sm="1" md-colspan="{{chart ? 2 : 1}}">-->
+
+                <div ng-switch on="chart">
+                    <div class="host-list-item" ng-switch-when="false">
                         <md-icon md-svg-icon="{{host.status ? 'smile' : 'sad'}}"
                                  ng-class="host.status ? 'ok' : 'warn'"
                                  alt="{{host.status ? 'OK' : 'FAIL'}}">
                         </md-icon>
                         <div class="host-list-item-text">
                             <h3>{{host.name}}</h3>
-                            <p>{{host.last | momentCalendar}}</p>
+                            <p>{{host.last | date:'short'}}</p>
                         </div>
                     </div>
-                </md-grid-tile>
-            </md-grid-list>
-        </md-content>
-    </div>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular-animate.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular-aria.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-material/0.9.4/angular-material.min.js"></script>
-    <script src="justmon.js"></script>
+                    <div class="host-list-item" ng-switch-when="true">
+                        <md-button class="md-icon-button" aria-label="Back">
+                            <md-icon md-svg-icon="back"></md-icon>
+                        </md-button>
+                        <timeline host="host"></timeline>
+                    </div>
+
+                </div>
+            </md-grid-tile>
+        </md-grid-list>
+    </md-content>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script>
+<script src="https://www.google.com/jsapi"></script>
+<script src="justmon.js"></script>
 </body>
 </html>
